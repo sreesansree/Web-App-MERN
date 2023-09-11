@@ -9,6 +9,7 @@ import userRoutes from "./routes/userRoutes.js";
 
 connectDB();
 
+
 const app = express();
 
 app.use('/api/users', userRoutes);
