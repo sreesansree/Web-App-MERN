@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import HomeScreens from "./screens/HomeScreens";
+
 
 const App = () => {
   return (
@@ -13,7 +13,7 @@ const App = () => {
       <Header />
 
       <ToastContainer position="top-center" />
-      <HomeScreens />
+    
       <Container className="my-2">
         <Outlet />
       </Container>
