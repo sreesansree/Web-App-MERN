@@ -1,79 +1,114 @@
-import React from 'react';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Form, Button, Row, Col } from 'react-bootstrap';
-import FormContainer from '../components/FormContainer';
+import React from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useRegisterMutation } from "../slices/usersApiSlice";
+import { setCredentials } from "../slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from 'react-toastify';
+import {
+  Form,
+  Button,
+  Row,
+  Col,
+  FormGroup,
+  FormLabel,
+  FormControl,
+} from "react-bootstrap";
+import FormContainer from "../components/FormContainer";
+import "./RegisterScreen.css";
+import Loader from "../components/Loader";
 
 const RegisterScreen = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
 
-  const submitHandler = async (e) => {
-    e.preventDefaul();
-    console.log('submit')
-  }
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [register, { isLoading }] = useRegisterMutation();
+  const { userInfo } = useSelector((state) => state.auth);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/");
+    }
+  }, [navigate, userInfo]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      toast.error('Password and Confirm Password do not match');
+    } else {
+      try {
+        const res = await register({ name, email, password }).unwrap();
+        dispatch(setCredentials({ ...res }));
+        toast.success('Registered successfully!');
+        navigate('/login');
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    }
+  };
 
   return (
     <FormContainer>
-      <h1>Sign Up</h1>
-      <Form onSubmit={submitHandler}>
-
-        <Form.Group className='my-2' controlId='name'>
-          <Form.Label>User Name</Form.Label>
-          <Form.Control
-            type='text'
-            placeholder='Enter Username'
+      <h1 className="text-center mb-4">Sign Up</h1>
+      <Form onSubmit={handleSubmit}>
+        <FormGroup controlId="name">
+          <FormLabel>Name</FormLabel>
+          <FormControl
+            type="text"
+            placeholder="Enter your name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+          />
+        </FormGroup>
 
-        <Form.Group className='my-2' controlId='email'>
-          <Form.Label>Email Address </Form.Label>
-          <Form.Control
-            type='email'
-            placeholder='Enter Email'
+        <FormGroup controlId="email">
+          <FormLabel>Email</FormLabel>
+          <FormControl
+            type="email"
+            placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+          />
+        </FormGroup>
 
-        <Form.Group className='my-2' controlId='password'>
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type='password'
-            placeholder='Enter Password'
+        <FormGroup controlId="password">
+          <FormLabel>Password</FormLabel>
+          <FormControl
+            type="password"
+            placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
-       
-        <Form.Group className='my-2' controlId='ConfirmPassword'>
-          <Form.Label>Confirm Password</Form.Label>
-          <Form.Control
-            type='password'
-            placeholder='Enter Password'
+          />
+        </FormGroup>
+        <FormGroup controlId="confirmPassword">
+          <FormLabel>Confirm Password</FormLabel>
+          <FormControl
+            type="password"
+            placeholder="Confirm your password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
-
-        <Button type='submit' variant='primary' className='mt-3'>
-         Sign Up
+          />
+        </FormGroup>
+        {isLoading && <Loader />}
+        <Button type="submit" variant="primary" className="w-100 mt-3" disabled={isLoading}>
+          {isLoading ? 'Registering...' : 'Register'}
         </Button>
 
-        <Row className='py-3'>
+        <Row className="py-3">
           <Col>
-           Already have an account ? {" "} <Link className="dark" to='/login'>Sign In</Link>
+            Already a customer? <Link to='/login'>Login here</Link>
           </Col>
         </Row>
-
       </Form>
     </FormContainer>
   );
-}
+};
 
 export default RegisterScreen;
-

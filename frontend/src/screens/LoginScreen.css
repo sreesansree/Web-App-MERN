@@ -47,4 +47,8 @@
     padding-top: 1rem;
     padding-bottom: 1rem;
   }
-  
+  .signin{
+    display: flex;
+    justify-content: center;
+    color: #007bff;
+  }
