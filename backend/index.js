@@ -18,6 +18,13 @@ app.use(express.urlencoded({extended : true}));
 
 app.use(cookieParser());
 
+
+// cloudinary.v2.config({
+//     cloud_name:"duhvcmhss",
+//     api_key:'441944377857495',
+//     api_secret: "g09PfHjDob_Awh735owiVRyHtsY",
+//   });
+
 app.use('/api/users', userRoutes);
 
 app.get('/', (req, res) => res.send('server is ready'));

@@ -1,7 +1,8 @@
 import asyncHandler from "express-async-handler";
 import User from '../models/userModel.js';
 import generateToken from "../utils/generateToken.js";
-
+import Admin from '../models/adminModel.js'
+import cloudinary from 'cloudinary'
 
 
 
@@ -15,7 +16,8 @@ const authUser = asyncHandler(async (req, res) => {
         res.status(201).json({
             _id: user._id,
             name: user.name,
-            email: user.email
+            email: user.email,
+            profileimage: user.profileimage
         });
     } else {
         res.status(401);
@@ -80,34 +82,65 @@ const getUserProfile = asyncHandler(async (req, res) => {
 
 
 const updateUserProfile = asyncHandler(async (req, res) => {
-
-    const user = await User.findById(req.user._id);
-    // console.log(user, 'useerrrr')
-    if (user) {
-        user.name = req.body.name || user.name;
-        user.email = req.body.email || user.email;
-
-        if (req.body.password) {
-            user.password = req.body.password
+    try {
+        const user = await User.findById(req.user._id);
+        // console.log(user, 'useerrrr')
+        if (req.body.profileimage) {
+            const image = req.body.profileimage
+            const uploadResponse = await cloudinary.v2.uploader.upload(image)
+            user.profileimage = uploadResponse.url;
         }
-        const updatedUser = await user.save();
-        // console.log(req.body.email, "emaaaiiiillll")
-        res.status(200).json({
-            _id: updatedUser._id,
-            name: updatedUser.name,
-            email: updatedUser.email
-        });
-        // console.log(updatedUser, 'updatedUseerrr')
-    } else {
-        res.status(404);
-        throw new Error('User not found');
+
+        if (user) {
+            user.name = req.body.name || user.name;
+            user.email = req.body.email || user.email;
+
+            if (req.body.password) {
+                user.password = req.body.password
+            }
+            const updatedUser = await user.save();
+            // console.log(req.body.email, "emaaaiiiillll")
+            res.status(200).json({
+                _id: updatedUser._id,
+                name: updatedUser.name,
+                email: updatedUser.email,
+                profileimage: updatedUser.profileimage
+            });
+            // console.log(updatedUser, 'updatedUseerrr')
+        } else {
+            res.status(404);
+            throw new Error('User not found');
+        }
+
+        res.status(200).json({ message: "update user prifle user" })
+    } catch (error) {
+        console.log(error.message)
+
     }
+
 });
+
+const adminLogin = asyncHandler(async (req, res) => {
+    console.log(req.body, 'Request body');
+    const { email, password } = req.body;
+    try {
+        const admin = await Admin.findOne({ email });
+        if (admin) {
+            if (password = admin.password) {
+                generateToken(res, admin.email)
+                res.status(200).json({ message: 'hakjhhs' })
+            }
+        }
+    } catch (error) {
+        console.log(error.message)
+    }
+})
 
 export {
     authUser,
     registerUser,
     logOutUser,
     getUserProfile,
-    updateUserProfile
+    updateUserProfile,
+    adminLogin
 }

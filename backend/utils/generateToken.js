@@ -12,4 +12,18 @@ const generateToken = (res, userId) => {
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     })
 }
+
+export const generateadminToken=(res,adminId)=>{
+    const token=jwt.sign({adminId},process.env.JWT_SECRET,{
+        expiresIn:'2d',
+    })
+
+    res.cookie('admintoken',token,{
+        httpOnly:true,
+        secure:process.env.NODE_ENV !== 'development',
+        sameSite:'strict',
+        maxAge:2 * 24 * 60 * 60 *1000
+    })
+
+}
 export default generateToken;
