@@ -22,6 +22,8 @@ const ProfileScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [previewImage, setPreviewImage] = useState('');
+  const [profileimage,setProfileImage]=useState('')
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -32,12 +34,33 @@ const ProfileScreen = () => {
 
   const [updateProfile,{ isLoading }] = useUpdateUserMutation();
 
-  useEffect(() => {
+  useEffect(()=>{
 
-    setName(userInfo.name);
-    setEmail(userInfo.email);
+    if(userInfo)
+    {
+      setName(userInfo.name);
+      setEmail(userInfo.email);
+      setProfileImage(userInfo.profileimage || '');
+      setPreviewImage(userInfo.profileimage || '')
+    }
 
-  }, [userInfo.name, userInfo.email]);
+  },[userInfo])
+
+  const handleFileChange = (e) => {
+    const { files } = e.target;
+    const file = files[0];
+    previewFile(file);
+  };
+  
+  function previewFile(file) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const result = reader.result;
+      setPreviewImage(result);
+      setProfileImage(result); 
+    };
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -49,11 +72,12 @@ const ProfileScreen = () => {
           _id:userInfo._id,
           name,
           email,
-          password
+          password,
+          profileimage
         }).unwrap();
         console.log(res)
         dispatch(setCredentials({...res}));
-        toast.success('Profile updated');
+        toast.success('Profile updated successfully');
       } catch (error) {
         toast.error(error?.data?.message || error.error)
       }
@@ -65,7 +89,21 @@ const ProfileScreen = () => {
       <h1 className="text-center mb-4">Update Profile</h1>
       <Form onSubmit={handleSubmit}>
 
-
+      <FormGroup className="my-2" controlId="image">
+          <FormLabel>PROFILE PHOTO</FormLabel>
+          {profileimage && (
+            <img
+              src={profileimage}
+              alt="Profile"
+              style={{ maxWidth: "150px", marginBottom: "10px" }}
+            />
+          )}
+          <FormControl
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+          />
+        </FormGroup>
 
         <FormGroup controlId="name">
           <FormLabel>Name</FormLabel>
