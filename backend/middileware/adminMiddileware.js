@@ -5,7 +5,7 @@ import Admin from '../models/adminModel.js'
 
 
 const protectadmin =asyncHandler( async (req, res, next) => {
-    console.log("j");
+
     const token = req.cookies.admintoken;
     console.log(token,"tokennnn");
 

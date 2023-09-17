@@ -27,8 +27,10 @@ cloudinary.v2.config({
     api_secret: 'fUU1B7iSPKPk76CGk0Ae77cZTgo' 
   });
 
+
 app.use('/api/users', userRoutes);
 app.use('/admin',adminRoutes);
+
 app.get('/', (req, res) => res.send('server is ready'));
 
 app.use(notFound);

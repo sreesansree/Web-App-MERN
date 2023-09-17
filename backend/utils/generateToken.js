@@ -14,6 +14,7 @@ const generateToken = (res, userId) => {
 }
 
 export const generateadminToken=(res,adminId)=>{
+    console.log(adminId,'adminIdddd')
     const token=jwt.sign({adminId},process.env.JWT_SECRET,{
         expiresIn:'2d',
     })

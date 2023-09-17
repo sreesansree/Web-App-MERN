@@ -1,19 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { parse } from "dotenv";
+
 
 
 
 const initialState={
     userInfo:localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
 }
-console.log(initialState,'{}}}}}}}}}}}}')
-
+console.log(initialState,":DDDDDDDDDDDDDDDDDDDDD")
 const authSlice=createSlice({
     name:"auth",
     initialState,
     reducers:{
         setCredentials:(state,action)=>{
-            console.log(action.payload,'pppppppppppppppp<<><>aciton .payloddd<><<<pppppppppp')
             state.userInfo=action.payload;
             localStorage.setItem('userInfo',JSON.stringify(action.payload))
         },
