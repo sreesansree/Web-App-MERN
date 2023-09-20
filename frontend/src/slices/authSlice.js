@@ -1,6 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { parse } from "dotenv";
-
 
 
 const initialState={

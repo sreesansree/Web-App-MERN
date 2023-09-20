@@ -7,7 +7,7 @@ import {
     logOutUser,
     getUserProfile,
     updateUserProfile,
-    adminLogin
+    // adminLogin
 } from "../controllers/userControllers.js";
 import { protect } from "../middileware/authMiddleware.js";
 
@@ -16,6 +16,6 @@ router.post('/register', registerUser);
 router.post('/logout', logOutUser); 
 
 router.route('/profile').get(protect,getUserProfile).put(protect,updateUserProfile);
-router.post('/adminlogin',adminLogin);
+// router.post('/adminlogin',adminLogin);
 
 export default router;

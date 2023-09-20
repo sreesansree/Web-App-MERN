@@ -4,6 +4,7 @@ import User from '../models/userModel.js';
 import Admin from '../models/adminModel.js'
 // import bcryptjs from 'bcryptjs';
 import generateadminToken from '../utils/generateToken.js';
+import { request } from 'express';
 
 const adminLogin = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
@@ -11,6 +12,7 @@ const adminLogin = asyncHandler(async (req, res) => {
     console.log(admin, 'admiinnnnn');
     if (admin && await password === admin.password) {
         generateadminToken(res, admin._id)
+        
         res.status(201).json({
             message: "Logged in Successfully",
             _id: admin._id,
@@ -33,9 +35,7 @@ const logout = asyncHandler(async (req, res) => {
 
 const addUser = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
-
     const userExists = await User.findOne({ email: email });
-
     if (userExists) {
         res.status(400);
         throw new Error('User already exists');
@@ -47,7 +47,7 @@ const addUser = asyncHandler(async (req, res) => {
         password
     });
     if (user) {
-        generateadminToken(res, user, _id);
+        generateadminToken(res, user._id);
         res.status(201).json({
             _id: user._id,
             name: user.name,
@@ -57,6 +57,7 @@ const addUser = asyncHandler(async (req, res) => {
         res.status(400);
         throw new Error('Invalid user data');
     }
+
     res.status(200).json({ message: 'Register User' });
 });
 
@@ -69,7 +70,7 @@ const allUser = async (req, res) => {
     }
 };
 
-const getUser = async (req, res) => {   
+const getUser = async (req, res) => {
 
     try {
         const user = await User.findById(req.params.id)
@@ -83,18 +84,40 @@ const getUser = async (req, res) => {
 
 };
 
-const editUser = async (req, res) => {
-    let user = req.body
-    const editUser = new User(user)
-    console.log(user, 'edit user')
-    try {
-        await User.updateOne({ _id: req.params.id }, editUser)
-        res.status(201).json(editUser)
+// const editUser = async (req, res) => {
+//     let user = req.body
+//     const editUser = new User(user)
+//     console.log(user, 'edit user')
+//     try {
+//         await User.updateOne({ _id: req.params.id }, editUser)
+//         res.status(201).json(editUser)
 
+//     } catch (error) {
+//         res.status(409)
+//     }
+// };
+const editUser = asyncHandler(async(req,res)=>{
+    try {
+        const user = await User.findById(req.user._id);
+        if(user){
+            user.name = req.body.name || user.name;
+            user.email = req.body.email || user.email;
+            const updatedUser = await user.save();
+            
+            res.status(200).json({
+                _id:updatedUser._id,
+                name:updatedUser.name,
+                email:updatedUser.email
+            });
+        } else{
+            res.status(404);
+            throw new Error('User Not Found')
+        }
+        res.status(200).json({ message: "updated User" })
     } catch (error) {
-        res.status(409)
+        console.log(error.message)
     }
-};
+})
 
 const deleteUser = async (req, res) => {
     try {

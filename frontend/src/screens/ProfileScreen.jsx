@@ -78,6 +78,7 @@ const ProfileScreen = () => {
         console.log(res)
         dispatch(setCredentials({...res}));
         toast.success('Profile updated successfully');
+        navigate('/');
       } catch (error) {
         toast.error(error?.data?.message || error.error)
       }

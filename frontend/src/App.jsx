@@ -11,9 +11,7 @@ const App = () => {
     <div>
 
       <Header />
-
       <ToastContainer position="top-center" />
-    
       <Container className="my-2">
         <Outlet />
       </Container>

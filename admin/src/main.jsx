@@ -20,11 +20,11 @@ const adminrouter = createBrowserRouter(
     <Route path='/' element={<App />}>
       <Route path='/login' element={<AdminLogin />} />
       <Route path='/' element={<Home />} />
+
       <Route path='' element={<PrivateRoute />}>
         <Route path='/alluser' element={<Alluser />} />
         <Route path='/adduser' element={<AddUser />} />
         <Route path='/edit/:id' element={<EditUser />} />
-
       </Route>
 
     </Route>

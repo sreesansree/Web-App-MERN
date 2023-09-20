@@ -12,7 +12,10 @@ const Home = () => {
       <div className="content">
         {name ? (
           <>
-            <img src={image} alt="" />
+          
+          {image && (
+              <img src={image} alt="" className="fixed-image" />
+            )}
             <h1 className="heading">Welcome, {name}!</h1>
             <p className="sub-heading">The Journey Begins here</p>
           </>
@@ -29,7 +32,6 @@ const Home = () => {
             </p>
 
           </>
-
         )}
       </div>
     </div>

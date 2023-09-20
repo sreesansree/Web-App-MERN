@@ -3,11 +3,11 @@ import dotenv from 'dotenv'
 import cookieParser from "cookie-parser";
 import { notFound, errorHandler } from "./middileware/errorMiddileware.js";
 import connectDB from "./config/db.js";
-const port = process.env.PORT || 5000;
 import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoute.js";
 import cors from 'cors'
 import cloudinary from 'cloudinary'
+const port = process.env.PORT || 5000;
 
 const app = express();
 dotenv.config();
@@ -15,7 +15,7 @@ connectDB();
 
 
 
-app.use(express.json());
+app.use(express.json({extended : true, limit: '500mb' }));
 app.use(express.urlencoded({extended : true,limit:'500mb'}));
 app.use(cookieParser());
 app.use(cors())

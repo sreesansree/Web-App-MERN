@@ -2,7 +2,7 @@ import axios from 'axios';
 import {adminapiSlice} from '../Redux/adminapiSlice';
  
 
-const URL='http://localhost:5000/admin'
+const URL='http://localhost:5000/admin';
 
 export const addUserdetails= async(data)=>{
 

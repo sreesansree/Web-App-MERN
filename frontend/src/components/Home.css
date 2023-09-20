@@ -22,3 +22,8 @@
     color: #666;
   }
   
+  .fixed-image {
+    width: 250PX;
+    height: 250PX;
+    border-radius: 40%
+  }
