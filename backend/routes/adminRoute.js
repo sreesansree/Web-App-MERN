@@ -8,8 +8,8 @@ const router = express.Router();
 router.use(cookieParser());
 
 
-router.get('/all', allUser)
-router.get('/:id', protectadmin, getUser)
+router.get('/all',allUser)
+router.get('/:id',  getUser)
 
 router.put('/:id', editUser)
 router.delete('/:id', deleteUser)

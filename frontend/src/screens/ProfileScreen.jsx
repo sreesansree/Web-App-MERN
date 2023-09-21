@@ -91,12 +91,12 @@ const ProfileScreen = () => {
       <Form onSubmit={handleSubmit}>
 
       <FormGroup className="my-2" controlId="image">
-          <FormLabel>PROFILE PHOTO</FormLabel>
+          <FormLabel>PROFILE PHOTO  </FormLabel>
           {profileimage && (
             <img
               src={profileimage}
               alt="Profile"
-              style={{ maxWidth: "150px", marginBottom: "10px" }}
+              style={{ maxWidth: "100px", marginBottom: "10px",marginLeft:'10px', borderRadius: '45%',}}
             />
           )}
           <FormControl

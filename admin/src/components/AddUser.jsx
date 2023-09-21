@@ -11,7 +11,7 @@ import {
 import { addUserdetails } from "../services/api";
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom'
-import { Toast } from "bootstrap";
+
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -26,21 +26,31 @@ const Container = styled(FormGroup)`
 `;
 
 const AddUser = () => {
-
   const navigate = useNavigate()
   const [user, setUser] = useState({})
 
   const onvaluechange = (e) => {
     e.preventDefault()
     setUser({ ...user, [e.target.name]: e.target.value })
-    console.log(user)
+    console.log(e.target.value)
   }
 
   const adduserdetails = async () => {
-    await addUserdetails(user)
-    toast.success('User Created Successfully')
-    navigate('/alluser');
-  }
+    try {
+      await addUserdetails(user);
+      toast.success('User Created Successfully');
+      navigate('/alluser');
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        toast.error('User already exists');
+      } else {
+        // Handle other errors ( server errors).
+        toast.error(error?.data?.message || error.message);
+      }
+    }
+  };
+  
+  
 
   return (
     <div>
@@ -48,19 +58,19 @@ const AddUser = () => {
         <Typography variant="h4">Add User</Typography>
         <FormControl>
           <InputLabel>Name</InputLabel>
-          <Input onChange={(e) => onvaluechange(e)} type="text" name="name" />
+          <Input onChange={(e) => onvaluechange(e)} name="name" />
         </FormControl>
         <FormControl>
           <InputLabel>Email</InputLabel>
-          <Input onChange={(e) => onvaluechange(e)} type='email' name="email" />
+          <Input onChange={(e) => onvaluechange(e)} name="email" />
         </FormControl>
         <FormControl>
           <InputLabel>Password</InputLabel>
-          <Input onChange={(e) => onvaluechange(e)} type='password' name='password' />
+          <Input onChange={(e) => onvaluechange(e)} name='password' />
         </FormControl>
         <FormControl>
           <InputLabel>confirm Password</InputLabel>
-          <Input onChange={(e) => onvaluechange(e)} type='password' name='confirmpassword' />
+          <Input onChange={(e) => onvaluechange(e)} name='confirmpassword' />
         </FormControl>
         <FormControl>
           <Button onClick={() => adduserdetails()} variant="contained">ADD USER</Button>

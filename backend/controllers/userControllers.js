@@ -11,6 +11,9 @@ const authUser = asyncHandler(async (req, res) => {
 
     const user = await User.findOne({ email })
 
+    if(!user){
+        throw new Error('Invalid Account')
+    }
     if (user && await bcryptjs.compare(password, user.password)) {
         generateToken(res, user._id)
         res.status(201).json({

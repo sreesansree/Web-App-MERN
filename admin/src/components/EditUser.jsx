@@ -12,6 +12,7 @@ import { editUser, getUser } from "../services/api";
 import { useState } from "react";
 import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
 
 
 const Container = styled(FormGroup)`
@@ -45,10 +46,13 @@ const EditUser = () => {
   }
 
   const edituserdetails = async () => {
-    await editUser(user, id)
-    navigate('/alluser')
-
-
+    try {
+      await editUser(user, id)
+      toast.success('Updated Successfully')
+      navigate('/alluser')
+    } catch (error) {
+      toast.error(err?.data?.message || err.error);
+    }
   }
 
   return (
